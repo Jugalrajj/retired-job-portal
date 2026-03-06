@@ -1,0 +1,40 @@
+/* App.css */
+
+#root {
+  width: 100% !important;
+  max-width: 100vw !important; /* Forces it to full screen width */
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center;
+  display: block; /* Changes from flex to block to prevent centering gaps */
+}
+
+/* Rest of your styles */
+.logo {
+  height: 4em;
+  margin: 0;
+  will-change: filter;
+}
+
+.logo:hover { 
+  filter: drop-shadow(0 0 2em #646cffaa); 
+}
+
+.logo.react:hover { 
+  filter: drop-shadow(0 0 2em #61dafbaa); 
+}
+
+@keyframes logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card { padding: 2em; }
+
+.read-the-docs { color: #888; }
