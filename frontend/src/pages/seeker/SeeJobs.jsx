@@ -13,7 +13,6 @@ import {
   SlidersHorizontal,
   LayoutGrid,
   List,
-  X,
   ChevronLeft,
   ChevronRight,
   ChevronDown,
@@ -196,10 +195,36 @@ const SeeJobs = () => {
           setJobs([]);
         }
       } else {
+        // 1. Fetch jobs using only the dropdown filters
         const res = await api.get("/jobs", {
-          params: { title: debouncedSearchTerm, ...filters },
+          params: { ...filters },
         });
-        setJobs(res.data);
+
+        let fetchedJobs = Array.isArray(res.data) ? res.data : [];
+
+        // 2. Perform a multi-field search locally
+        if (debouncedSearchTerm) {
+          const searchLower = debouncedSearchTerm.toLowerCase();
+
+          fetchedJobs = fetchedJobs.filter((job) => {
+            // Check Job Title
+            const matchTitle = job.title?.toLowerCase().includes(searchLower);
+
+            // Check Company Name (checking both companyId and employer just in case)
+            const matchCompany =
+              job.companyId?.name?.toLowerCase().includes(searchLower) ||
+              job.employer?.name?.toLowerCase().includes(searchLower);
+
+            // Check Skills
+            const matchSkill = job.skills?.some((skill) =>
+              skill.toLowerCase().includes(searchLower),
+            );
+
+            return matchTitle || matchCompany || matchSkill;
+          });
+        }
+
+        setJobs(fetchedJobs);
       }
 
       // Reset to page 1 when data changes

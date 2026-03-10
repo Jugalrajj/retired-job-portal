@@ -1,6 +1,4 @@
 import express from "express";
-import multer from "multer";
-import path from "path";
 
 import {
   createJob,
@@ -36,24 +34,10 @@ import {
   checkPermission,
 } from "../middleware/role.middleware.js";
 
+// 🔥 CRITICAL FIX: Import your Cloudinary middleware instead of local multer!
+import upload from "../middleware/upload.middleware.js";
+
 const router = express.Router();
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/resumes/"),
-  filename: (req, file, cb) =>
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    ),
-});
-
-const upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype === "application/pdf") cb(null, true);
-    else cb(new Error("Only PDF files are allowed!"), false);
-  },
-});
 
 // --- 1. SPECIFIC ROUTES (Must be defined before /:id) ---
 
@@ -67,7 +51,6 @@ router.get(
   getJobStatsEmployer
 );
 
-// 🔥 FIX: Allow 'jobseeker' AND 'seeker'
 router.get(
   "/stats/seeker",
   protect,
@@ -124,9 +107,7 @@ router.delete(
   removeMember
 );
 
-// 🔥 FIX: Allow 'jobseeker' AND 'seeker' for fetching applied jobs
 router.get("/applied", protect, authorizeRoles("jobseeker", "seeker"), getAppliedJobs);
-
 router.get("/saved", protect, getSavedJobs);
 router.get("/check-limit", protect, checkJobLimit);
 
@@ -135,7 +116,7 @@ router.get("/check-limit", protect, checkJobLimit);
 router.patch('/:id/status', updateJobStatus);
 router.patch('/:id', updateJob);
 
-// 🔥 FIX: Allow 'jobseeker' AND 'seeker' to apply
+// This will now automatically send the "resume" file to Cloudinary!
 router.post(
   "/apply/:id",
   protect,

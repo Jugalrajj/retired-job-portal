@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api"; 
 import { 
-  Bookmark, MapPin, Building2, 
+  Bookmark, MapPin, 
   ArrowRight, Trash2,
   Briefcase, Sparkles, Search,
   ChevronLeft, ChevronRight

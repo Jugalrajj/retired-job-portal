@@ -2,11 +2,23 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import useAuthStore from "../../context/useAuthStore";
-import { 
-  MapPin, Briefcase, DollarSign, Clock, Users, Zap, 
-  Share2, ShieldCheck, ArrowLeft, Building2, Award, 
-  Calendar, Monitor, Activity, Heart, CheckCircle, X,
-  LogIn, ChevronRight
+import {
+  MapPin,
+  Briefcase,
+  DollarSign,
+  Clock,
+  Users,
+  ShieldCheck,
+  ArrowLeft,
+  Building2,
+  Award,
+  Calendar,
+  Monitor,
+  Activity,
+  Heart,
+  X,
+  LogIn,
+  ChevronRight,
 } from "lucide-react";
 
 // Helper to fix image URLs
@@ -26,19 +38,19 @@ const ApplyJob = () => {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isApplied, setIsApplied] = useState(false);
-  
+
   // --- MODAL STATES ---
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false); // New State for Login Popup
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // --- RETIRED-FRIENDLY FORM STATE ---
-  const [formData, setFormData] = useState({ 
-    fullName: currentUser?.name || "", 
-    yearsOfExperience: "", 
-    keyExpertise: "", 
-    availability: "", 
-    healthConsiderations: ""
+  const [formData, setFormData] = useState({
+    fullName: currentUser?.name || "",
+    yearsOfExperience: "",
+    keyExpertise: "",
+    availability: "",
+    healthConsiderations: "",
   });
   const [resume, setResume] = useState(null);
 
@@ -50,7 +62,7 @@ const ApplyJob = () => {
 
       if (currentUser?.role === "seeker") {
         const { data: appliedData } = await api.get("/jobs/applied");
-        const hasApplied = appliedData.some(aj => aj._id === res.data._id);
+        const hasApplied = appliedData.some((aj) => aj._id === res.data._id);
         setIsApplied(hasApplied);
       }
     } catch (err) {
@@ -71,7 +83,7 @@ const ApplyJob = () => {
       setShowLoginModal(true); // Show the Login Popup
       return;
     }
-    
+
     // 2. Check role
     if (currentUser.role !== "seeker") {
       alert("Please login as a Job Seeker to apply.");
@@ -89,9 +101,9 @@ const ApplyJob = () => {
     e.preventDefault();
     setIsSubmitting(true);
     const data = new FormData();
-    
+
     // Append updated fields
-    Object.keys(formData).forEach(key => data.append(key, formData[key]));
+    Object.keys(formData).forEach((key) => data.append(key, formData[key]));
     if (resume) data.append("resume", resume);
 
     try {
@@ -108,41 +120,56 @@ const ApplyJob = () => {
     }
   };
 
-  if (loading) return <div style={{padding: 50, textAlign: 'center', color: '#64748b'}}>Loading Opportunity...</div>;
-  if (!job) return <div style={{padding: 50, textAlign: 'center'}}>Job not found.</div>;
+  if (loading)
+    return (
+      <div style={{ padding: 50, textAlign: "center", color: "#64748b" }}>
+        Loading Opportunity...
+      </div>
+    );
+  if (!job)
+    return (
+      <div style={{ padding: 50, textAlign: "center" }}>Job not found.</div>
+    );
 
   return (
     <div className="job-details-page">
       <div className="container">
-        
         {/* --- HEADER --- */}
         <div className="job-header">
           <button onClick={() => navigate(-1)} className="back-link">
-            <ArrowLeft size={18}/> Back to Search
+            <ArrowLeft size={18} /> Back to Search
           </button>
-          
+
           <div className="header-content">
             <div className="company-logo">
               {job.employer?.logoUrl ? (
                 <img src={getImageUrl(job.employer.logoUrl)} alt="logo" />
               ) : (
-                <Building2 size={40} color="#64748b"/>
+                <Building2 size={40} color="#64748b" />
               )}
             </div>
             <div className="header-text">
               <h1>{job.title}</h1>
               <div className="header-meta">
-                <span><Building2 size={16}/> {job.employer?.name || "Confidential Employer"}</span>
+                <span>
+                  <Building2 size={16} />{" "}
+                  {job.employer?.name || "Confidential Employer"}
+                </span>
                 <span className="dot">•</span>
-                <span><MapPin size={16}/> {job.location}</span>
+                <span>
+                  <MapPin size={16} /> {job.location}
+                </span>
                 <span className="dot">•</span>
-                <span><Clock size={16}/> Posted {new Date(job.createdAt).toLocaleDateString()}</span>
+                <span>
+                  <Clock size={16} /> Posted{" "}
+                  {new Date(job.createdAt).toLocaleDateString()}
+                </span>
               </div>
             </div>
-            
+
             <div className="header-action">
-              <button 
-                className={`apply-btn ${isApplied ? 'applied' : ''}`} 
+              <button
+                className={`apply-btn ${isApplied ? "applied" : ""}`}
                 onClick={handleApplyClick}
                 disabled={isApplied}
               >
@@ -153,28 +180,32 @@ const ApplyJob = () => {
         </div>
 
         <div className="content-grid">
-          
           {/* --- LEFT: MAIN DETAILS --- */}
           <div className="main-col">
-            
             {/* Quick Stats Grid */}
             <div className="stats-grid">
               <div className="stat-card">
-                <div className="icon-box green"><DollarSign size={20}/></div>
+                <div className="icon-box green">
+                  <DollarSign size={20} />
+                </div>
                 <div>
                   <label>Compensation</label>
                   <strong>₹{job.salary?.toLocaleString()}</strong>
                 </div>
               </div>
               <div className="stat-card">
-                <div className="icon-box blue"><Briefcase size={20}/></div>
+                <div className="icon-box blue">
+                  <Briefcase size={20} />
+                </div>
                 <div>
                   <label>Work Mode</label>
                   <strong>{job.workMode}</strong>
                 </div>
               </div>
               <div className="stat-card">
-                <div className="icon-box orange"><Activity size={20}/></div>
+                <div className="icon-box orange">
+                  <Activity size={20} />
+                </div>
                 <div>
                   <label>Physicality</label>
                   <strong>{job.physicalDemands || "Sedentary"}</strong>
@@ -184,41 +215,64 @@ const ApplyJob = () => {
 
             {/* Description */}
             <div className="detail-section">
-              <h3><ShieldCheck size={22}/> Role Overview</h3>
+              <h3>
+                <ShieldCheck size={22} /> Role Overview
+              </h3>
               <p className="desc-text">{job.description}</p>
             </div>
 
             {/* Requirements & Tech */}
             <div className="detail-section">
-              <h3><Award size={22}/> Requirements & Skills</h3>
+              <h3>
+                <Award size={22} /> Requirements & Skills
+              </h3>
               <ul className="req-list">
-                <li><strong>Experience:</strong> Minimum {job.experienceRequired} years in relevant field.</li>
-                <li><strong>Tech Proficiency:</strong> {job.techLevel || "Basic (Email/Calls)"} - {job.techLevel === "Advanced" ? "Must know modern tools." : "Training provided."}</li>
-                <li><strong>Preferred Background:</strong> {job.preferredBackground || "Open to all retired professionals."}</li>
+                <li>
+                  <strong>Experience:</strong> Minimum {job.experienceRequired}{" "}
+                  years in relevant field.
+                </li>
+                <li>
+                  <strong>Tech Proficiency:</strong>{" "}
+                  {job.techLevel || "Basic (Email/Calls)"} -{" "}
+                  {job.techLevel === "Advanced"
+                    ? "Must know modern tools."
+                    : "Training provided."}
+                </li>
+                <li>
+                  <strong>Preferred Background:</strong>{" "}
+                  {job.preferredBackground ||
+                    "Open to all retired professionals."}
+                </li>
               </ul>
-              
+
               <div className="skills-row">
-                {job.skills?.split(',').map((skill, i) => (
-                  <span key={i} className="skill-tag">{skill.trim()}</span>
+                {job.skills?.split(",").map((skill, i) => (
+                  <span key={i} className="skill-tag">
+                    {skill.trim()}
+                  </span>
                 ))}
               </div>
             </div>
 
             {/* Benefits */}
             <div className="detail-section highlight-bg">
-              <h3><Heart size={22} color="#e11d48"/> Benefits & Perks</h3>
-              <p className="desc-text">{job.benefits || "Flexible timings, Respectful environment, Health coverage options."}</p>
+              <h3>
+                <Heart size={22} color="#e11d48" /> Benefits & Perks
+              </h3>
+              <p className="desc-text">
+                {job.benefits ||
+                  "Flexible timings, Respectful environment, Health coverage options."}
+              </p>
             </div>
-
           </div>
 
           {/* --- RIGHT: SIDEBAR SUMMARY --- */}
           <aside className="sidebar-col">
             <div className="sidebar-card">
               <h4>At a Glance</h4>
-              
+
               <div className="summary-item">
-                <Clock className="sum-icon"/>
+                <Clock className="sum-icon" />
                 <div>
                   <label>Time Commitment</label>
                   <span>{job.timeCommitment || "Flexible Hours"}</span>
@@ -226,7 +280,7 @@ const ApplyJob = () => {
               </div>
 
               <div className="summary-item">
-                <Calendar className="sum-icon"/>
+                <Calendar className="sum-icon" />
                 <div>
                   <label>Duration</label>
                   <span>{job.duration || "Permanent / Long-term"}</span>
@@ -234,7 +288,7 @@ const ApplyJob = () => {
               </div>
 
               <div className="summary-item">
-                <Monitor className="sum-icon"/>
+                <Monitor className="sum-icon" />
                 <div>
                   <label>Tech Requirement</label>
                   <span>{job.techLevel || "Basic"}</span>
@@ -242,19 +296,27 @@ const ApplyJob = () => {
               </div>
 
               <div className="summary-item">
-                <Users className="sum-icon"/>
+                <Users className="sum-icon" />
                 <div>
                   <label>Engagement Type</label>
                   <span>{job.workType}</span>
                 </div>
               </div>
 
-              <hr className="divider"/>
-              
-              <div style={{textAlign: 'center'}}>
-                <p style={{fontSize:'13px', color:'#64748b', marginBottom:'15px'}}>Interested in this role?</p>
-                <button 
-                  className={`apply-btn full ${isApplied ? 'applied' : ''}`} 
+              <hr className="divider" />
+
+              <div style={{ textAlign: "center" }}>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "#64748b",
+                    marginBottom: "15px",
+                  }}
+                >
+                  Interested in this role?
+                </p>
+                <button
+                  className={`apply-btn full ${isApplied ? "applied" : ""}`}
                   onClick={handleApplyClick}
                   disabled={isApplied}
                 >
@@ -265,61 +327,117 @@ const ApplyJob = () => {
 
             {/* Trust Badge */}
             <div className="trust-card">
-              <ShieldCheck size={32} color="#059669"/>
+              <ShieldCheck size={32} color="#059669" />
               <div>
                 <h5>Verified Opportunity</h5>
                 <p>Vetted for retired professionals.</p>
               </div>
             </div>
           </aside>
-
         </div>
       </div>
 
       {/* --- RETIREE APPLICATION FORM MODAL --- */}
       {showApplyModal && (
         <div className="modal-overlay" onClick={() => setShowApplyModal(false)}>
-          <div className="modal-card" onClick={e => e.stopPropagation()}>
-            <button className="close-modal" onClick={() => setShowApplyModal(false)}><X size={24}/></button>
-            
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="close-modal"
+              onClick={() => setShowApplyModal(false)}
+            >
+              <X size={24} />
+            </button>
+
             <div className="modal-header">
               <h2>Submit Application</h2>
-              <p>Apply to <strong>{job.employer?.name}</strong></p>
+              <p>
+                Apply to <strong>{job.employer?.name}</strong>
+              </p>
             </div>
 
             <form onSubmit={handleApplySubmit}>
               <div className="input-group">
                 <label>Full Name</label>
-                <input required value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} />
+                <input
+                  required
+                  value={formData.fullName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fullName: e.target.value })
+                  }
+                />
               </div>
-              
+
               <div className="grid-2">
                 <div className="input-group">
                   <label>Years of Experience</label>
-                  <input required value={formData.yearsOfExperience} onChange={e => setFormData({...formData, yearsOfExperience: e.target.value})} placeholder="e.g. 30 Years" />
+                  <input
+                    required
+                    value={formData.yearsOfExperience}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        yearsOfExperience: e.target.value,
+                      })
+                    }
+                    placeholder="e.g. 30 Years"
+                  />
                 </div>
                 <div className="input-group">
                   <label>Weekly Availability</label>
-                  <input required value={formData.availability} onChange={e => setFormData({...formData, availability: e.target.value})} placeholder="e.g. 15-20 Hours" />
+                  <input
+                    required
+                    value={formData.availability}
+                    onChange={(e) =>
+                      setFormData({ ...formData, availability: e.target.value })
+                    }
+                    placeholder="e.g. 15-20 Hours"
+                  />
                 </div>
               </div>
 
               <div className="input-group">
                 <label>Key Expertise Summary</label>
-                <textarea required rows="3" value={formData.keyExpertise} onChange={e => setFormData({...formData, keyExpertise: e.target.value})} placeholder="Briefly list your core skills (e.g. Auditing, Mentorship)..." />
+                <textarea
+                  required
+                  rows="3"
+                  value={formData.keyExpertise}
+                  onChange={(e) =>
+                    setFormData({ ...formData, keyExpertise: e.target.value })
+                  }
+                  placeholder="Briefly list your core skills (e.g. Auditing, Mentorship)..."
+                />
               </div>
 
               <div className="input-group">
                 <label>Health Considerations (Optional)</label>
-                <input value={formData.healthConsiderations} onChange={e => setFormData({...formData, healthConsiderations: e.target.value})} placeholder="Any physical limitations we should know?" />
+                <input
+                  value={formData.healthConsiderations}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      healthConsiderations: e.target.value,
+                    })
+                  }
+                  placeholder="Any physical limitations we should know?"
+                />
               </div>
 
               <div className="input-group">
                 <label>Resume / CV (PDF)</label>
-                <input type="file" accept=".pdf" required onChange={e => setResume(e.target.files[0])} className="file-input" />
+                <input
+                  type="file"
+                  accept=".pdf"
+                  required
+                  onChange={(e) => setResume(e.target.files[0])}
+                  className="file-input"
+                />
               </div>
 
-              <button type="submit" disabled={isSubmitting} className="submit-btn">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="submit-btn"
+              >
                 {isSubmitting ? "Sending..." : "Confirm Application"}
               </button>
             </form>
@@ -330,29 +448,54 @@ const ApplyJob = () => {
       {/* --- LOGIN REQUIRED MODAL --- */}
       {showLoginModal && (
         <div className="modal-overlay" onClick={() => setShowLoginModal(false)}>
-          <div className="modal-card login-popup" onClick={e => e.stopPropagation()}>
-            <button className="close-modal" onClick={() => setShowLoginModal(false)}>
-              <X size={20}/>
+          <div
+            className="modal-card login-popup"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="close-modal"
+              onClick={() => setShowLoginModal(false)}
+            >
+              <X size={20} />
             </button>
-            
+
             <div className="modal-icon-box">
-              <LogIn size={28}/>
+              <LogIn size={28} />
             </div>
-            
-            <div style={{textAlign:'center'}}>
-              <h3 style={{fontSize:'20px', fontWeight:800, color:'#0f172a', marginBottom:'8px'}}>
+
+            <div style={{ textAlign: "center" }}>
+              <h3
+                style={{
+                  fontSize: "20px",
+                  fontWeight: 800,
+                  color: "#0f172a",
+                  marginBottom: "8px",
+                }}
+              >
                 Login Required
               </h3>
-              
-              <p style={{color:'#64748b', fontSize:'14px', lineHeight:'1.5', padding: '0 10px', marginBottom: '25px'}}>
-                You must be logged in to apply for this position. Join our community of retired experts to access all opportunities.
+
+              <p
+                style={{
+                  color: "#64748b",
+                  fontSize: "14px",
+                  lineHeight: "1.5",
+                  padding: "0 10px",
+                  marginBottom: "25px",
+                }}
+              >
+                You must be logged in to apply for this position. Join our
+                community of retired experts to access all opportunities.
               </p>
-              
-              <button className="login-primary-btn" onClick={() => navigate('/auth/seeker')}>
-                Login to Apply <ChevronRight size={16}/>
+
+              <button
+                className="login-primary-btn"
+                onClick={() => navigate("/auth/seeker")}
+              >
+                Login to Apply <ChevronRight size={16} />
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => setShowLoginModal(false)}
                 className="cancel-btn"
               >

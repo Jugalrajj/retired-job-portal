@@ -171,7 +171,7 @@ export const sendFileMessage = async (req, res) => {
     const newMessage = new Message({ conversationId: conversation._id, sender: senderId, text: text || "", attachment: attachmentData });
     const previewText = text ? text : `Sent a ${fileType}`;
     
-    await Promise.all([
+    await Promise.all([ 
       newMessage.save(),
       conversation.updateOne({ lastMessage: { text: previewText, sender: senderId } }),
     ]);

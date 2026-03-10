@@ -9,13 +9,11 @@ import {
   Download,
   Briefcase,
   GraduationCap,
-  Globe,
   Calendar,
   Clock,
   User,
   Layers,
   FileText,
-  ExternalLink,
 } from "lucide-react";
 import toast from "react-hot-toast"; // 🔥 Added Toast for notifications
 

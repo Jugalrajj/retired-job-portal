@@ -24,7 +24,6 @@ import {
   Phone,
   Edit3,
   Globe,
-  Shield,
   Calendar,
 } from "lucide-react";
 

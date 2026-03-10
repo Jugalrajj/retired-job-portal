@@ -14,7 +14,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
+  Trash2,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);
@@ -27,6 +29,11 @@ const MyApplications = () => {
   // --- PAGINATION STATE ---
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(6);
+  // --- DELETE MODAL STATE ---
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    appId: null,
+  });
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -74,6 +81,31 @@ const MyApplications = () => {
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Reset to first page on search
+  };
+
+  // --- OPEN DELETE MODAL ---
+  const handleDeleteClick = (appId, e) => {
+    e.stopPropagation(); // Prevent card click events
+    setDeleteModal({ isOpen: true, appId });
+  };
+
+  // --- CONFIRM DELETION ---
+  const confirmDelete = async () => {
+    try {
+      // NOTE: If you create a backend route to withdraw applications later, uncomment the line below:
+      // await api.delete(`/jobs/applied/${deleteModal.appId}`);
+
+      // Instantly remove it from the frontend state
+      setApplications((prev) =>
+        prev.filter((app) => app._id !== deleteModal.appId),
+      );
+      toast.success("Application removed successfully!");
+    } catch (error) {
+      console.error("Error removing application:", error);
+      toast.error("Failed to remove application.");
+    } finally {
+      setDeleteModal({ isOpen: false, appId: null }); // Close modal
+    }
   };
 
   // --- HELPER: Status Styles (Theme Adapted) ---
@@ -340,6 +372,50 @@ const MyApplications = () => {
           transform: rotate(-45deg);
         }
 
+        /* --- NEW: Delete Button Styles --- */
+        .btn-delete {
+          color: #ef4444;
+          background: rgba(239, 68, 68, 0.05);
+          border-color: rgba(239, 68, 68, 0.2);
+        }
+        .btn-delete:hover {
+          background: #ef4444; 
+          color: #fff; 
+          border-color: #ef4444;
+          transform: scale(1.1); /* Overrides the -45deg rotation */
+        }
+
+        /* --- DELETE MODAL STYLES --- */
+        .confirm-modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000;
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(8px); animation: fadeIn 0.2s ease-out;
+            padding: 20px;
+        }
+        .confirm-modal {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px;
+            width: 100%; max-width: 400px; padding: 30px; 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); text-align: center;
+            animation: scaleIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .c-modal-icon {
+            width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 16px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .c-modal-icon.danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .c-modal-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
+        .c-modal-desc { font-size: 14px; color: var(--text-sub); line-height: 1.5; margin-bottom: 24px; }
+        .c-modal-actions { display: flex; gap: 12px; }
+        .btn-c-modal { flex: 1; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+        .btn-c-cancel { background: transparent; border: 1px solid var(--border); color: var(--text-sub); }
+        .btn-c-cancel:hover { border-color: var(--text-main); color: var(--text-main); }
+        .btn-c-confirm-danger { background: #ef4444; color: #fff; }
+        .btn-c-confirm-danger:hover { background: #dc2626; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+
         /* --- EMPTY STATE --- */
         .empty-state {
           text-align: center; padding: 80px 20px;
@@ -514,14 +590,24 @@ const MyApplications = () => {
                     </div>
 
                     {/* Footer: Action */}
+                    {/* Footer: Action */}
                     <div className="card-footer">
-                      <button
-                        onClick={() => navigate(`/find-jobs?title=${title}`)}
-                        className="action-btn"
-                        title="View Details"
-                      >
-                        <ArrowRight size={18} />
-                      </button>
+                      <div style={{ display: "flex", gap: "10px" }}>
+                        <button
+                          onClick={(e) => handleDeleteClick(app._id, e)}
+                          className="action-btn btn-delete"
+                          title="Delete Application"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                        <button
+                          onClick={() => navigate(`/find-jobs?title=${title}`)}
+                          className="action-btn"
+                          title="View Details"
+                        >
+                          <ArrowRight size={18} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
@@ -579,6 +665,39 @@ const MyApplications = () => {
           </div>
         )}
       </div>
+
+      {/* --- CUSTOM DELETE CONFIRMATION MODAL --- */}
+      {deleteModal.isOpen && (
+        <div
+          className="confirm-modal-overlay"
+          onClick={() => setDeleteModal({ isOpen: false, appId: null })}
+        >
+          <div className="confirm-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="c-modal-icon danger">
+              <Trash2 size={32} />
+            </div>
+            <h3 className="c-modal-title">Remove Application?</h3>
+            <p className="c-modal-desc">
+              Are you sure you want to remove this application from your list?
+              This action cannot be undone.
+            </p>
+            <div className="c-modal-actions">
+              <button
+                className="btn-c-modal btn-c-cancel"
+                onClick={() => setDeleteModal({ isOpen: false, appId: null })}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn-c-modal btn-c-confirm-danger"
+                onClick={confirmDelete}
+              >
+                Yes, Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

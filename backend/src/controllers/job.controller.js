@@ -491,7 +491,10 @@ export const applyJob = async (req, res) => {
       highestQualification,
       coverLetter,
     } = req.body;
-    const resumeUrl = req.file ? req.file.path : null;
+    
+    // 🔥 CRITICAL FIX: Force HTTPS for the Cloudinary URL
+    const resumeUrl = req.file ? req.file.path.replace(/^http:\/\//i, 'https://') : null;
+    
     const jobId = req.params.id;
     const seekerId = req.user.id;
 
