@@ -39,6 +39,7 @@ const SeekerDetailsForm = () => {
   const [config, setConfig] = useState({});
 
   const { user, updateUser } = useAuthStore();
+  const currentUser = user?.user || user || {};
 
   // Initial Fetch for View Mode & Config
   useEffect(() => {
@@ -84,8 +85,14 @@ const SeekerDetailsForm = () => {
   const handleSaveSuccess = (updatedProfile) => {
     setProfileData(updatedProfile);
     setIsEditing(false); // Switch back to View Mode
-    if (updatedProfile.photoUrl)
-      updateUser({ photoUrl: updatedProfile.photoUrl });
+
+    // Sync the global user store with the newly saved form data
+    updateUser({
+      name: updatedProfile.fullName,
+      email: updatedProfile.contactEmail,
+      phone: updatedProfile.phone,
+      ...(updatedProfile.photoUrl && { photoUrl: updatedProfile.photoUrl }),
+    });
   };
 
   if (loading)
@@ -112,6 +119,7 @@ const SeekerDetailsForm = () => {
           <ProfileEditor
             initialData={profileData}
             config={config} // Pass dynamic config here
+            currentUser={currentUser}
             onCancel={() => {
               // If cancelling but no profile data exists, stay in edit mode
               if (!profileData) {
@@ -124,7 +132,7 @@ const SeekerDetailsForm = () => {
         ) : (
           <ProfileView
             profile={profileData}
-            user={user}
+            user={currentUser}
             onEdit={() => setIsEditing(true)}
           />
         )}
@@ -183,7 +191,7 @@ const ProfileView = ({ profile, user, onEdit }) => {
           <div className="header-details">
             <div className="header-title-row">
               <div>
-                <h1>{profile.fullName}</h1>
+                <h1>{user?.name || profile.fullName}</h1>
                 <p className="headline">{profile.headline}</p>
               </div>
               <button className="btn-edit" onClick={onEdit}>
@@ -202,10 +210,10 @@ const ProfileView = ({ profile, user, onEdit }) => {
                 </div>
               )}
               <div className="meta-item">
-                <Mail size={14} /> {profile.contactEmail}
+                <Mail size={14} /> {user?.email || profile.contactEmail}
               </div>
               <div className="meta-item">
-                <Phone size={14} /> {profile.phone}
+                <Phone size={14} /> {user?.phone || profile.phone}
               </div>
               {profile.portfolio && (
                 <div className="meta-item">
@@ -416,7 +424,13 @@ const ProfileView = ({ profile, user, onEdit }) => {
 // =========================================================
 // 3. EDITOR COMPONENT (Wizard Form)
 // =========================================================
-const ProfileEditor = ({ initialData, onCancel, onSuccess, config }) => {
+const ProfileEditor = ({
+  initialData,
+  onCancel,
+  onSuccess,
+  config,
+  currentUser,
+}) => {
   const navigate = useNavigate();
 
   // --- EXTRACT DYNAMIC OPTIONS OR USE FALLBACKS ---
@@ -449,11 +463,11 @@ const ProfileEditor = ({ initialData, onCancel, onSuccess, config }) => {
   // Initialize with initialData if available
   const [formData, setFormData] = useState({
     // Step 1: Identity
-    fullName: initialData?.fullName || "",
+    fullName: currentUser?.name || initialData?.fullName || "",
     dob: initialData?.dob ? initialData.dob.split("T")[0] : "",
     location: initialData?.location || "",
-    contactEmail: initialData?.contactEmail || "",
-    phone: initialData?.phone || "",
+    contactEmail: currentUser?.email || initialData?.contactEmail || "",
+    phone: currentUser?.phone || initialData?.phone || "",
     headline: initialData?.headline || "",
     bio: initialData?.bio || "",
     portfolio: initialData?.portfolio || "",

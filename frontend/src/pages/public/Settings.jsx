@@ -462,18 +462,6 @@ const Settings = () => {
                         />
                       </div>
                     </div>
-                    <div className="input-group">
-                      <label>Short Bio</label>
-                      <div className="input-wrapper">
-                        <Briefcase className="input-icon"/>
-                        <input 
-                          type="text" 
-                          value={profile.bio} 
-                          onChange={e => setProfile({...profile, bio: e.target.value})} 
-                          placeholder="Brief introduction..."
-                        />
-                      </div>
-                    </div>
                   </div>
                   <div className="action-row">
                     <button type="submit" className="btn-save" disabled={loading}>
