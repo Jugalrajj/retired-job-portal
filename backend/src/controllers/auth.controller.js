@@ -1,6 +1,8 @@
 import User from "../models/User.model.js";
 import sendEmail from "../utils/sendEmail.js";
 import jwt from "jsonwebtoken";
+import axios from "axios";
+import { OAuth2Client } from "google-auth-library";
 
 // --- HELPERS ---
 const generateToken = (id) => {
@@ -62,6 +64,77 @@ export const login = async (req, res) => {
   } catch (error) {
     console.error("Login Error:", error);
     res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const googleLogin = async (req, res) => {
+  try {
+    const { token, role } = req.body;
+
+    if (!token) {
+      return res.status(400).json({ message: "Google token is required." });
+    }
+
+    // 1. Fetch user info from Google using the access token
+    const googleResponse = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    // 2. Extract user info
+    const { email, name, picture, email_verified } = googleResponse.data;
+
+    if (!email_verified) {
+      return res.status(401).json({ message: "Google email is not verified." });
+    }
+
+    // 3. Check if user already exists in your database
+    let user = await User.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      // 4. Auto-register if they don't exist
+      const roleToSave = role ? role.toLowerCase() : 'seeker';
+      
+      user = await User.create({
+        name,
+        email: email.toLowerCase(),
+        role: roleToSave,
+        isVerified: true, // Google emails are inherently verified
+        avatar: picture,
+        // Generate a random secure password since they are using Google
+        password: Math.random().toString(36).slice(-10) + Math.random().toString(36).slice(-10),
+        isActive: true
+      });
+    } else {
+      // 5. If user exists, check if account is active and matches requested role
+      if (!user.isActive) return res.status(403).json({ message: "Account deactivated." });
+
+      if (role) {
+        const requestedRole = role.toLowerCase();
+        const userRole = user.role; 
+
+        if (requestedRole === 'seeker') {
+           if (userRole !== 'jobseeker' && userRole !== 'seeker') {
+               return res.status(403).json({ message: "Account mismatch. Please login as an Employer." });
+           }
+        } else if (requestedRole === 'employer') {
+           if (!['employer', 'admin', 'recruiter'].includes(userRole)) {
+              return res.status(403).json({ message: "Account mismatch. Please login as a Job Seeker." });
+           }
+        }
+      }
+    }
+
+    // 6. Send User Data (Exclude password from response)
+    const fullUser = await User.findById(user._id).select("-password");
+
+    res.json({
+      token: generateToken(user._id),
+      user: fullUser 
+    });
+
+  } catch (error) {
+    console.error("Google Login Error:", error);
+    res.status(500).json({ message: "Failed to authenticate with Google." });
   }
 };
 
@@ -344,7 +417,7 @@ export const inviteMember = async (req, res) => {
         html: `
           <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; color: #333; max-width: 600px; border: 1px solid #e5e7eb; border-radius: 12px; background-color: #ffffff;">
             
-            <h2 style="color: #4f46e5; margin-top: 0;">Welcome to the Team, ${member.name}! 窓</h2>
+            <h2 style="color: #4f46e5; margin-top: 0;">Welcome to the Team, ${member.name}! 🎉</h2>
             
             <p style="font-size: 16px; line-height: 1.6;">
               You have been added to the recruitment team at <strong>IVGJobs</strong>. 
@@ -352,14 +425,14 @@ export const inviteMember = async (req, res) => {
             </p>
 
             <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #4f46e5;">
-              <h3 style="margin: 0 0 10px 0; color: #1f2937;">泊 Your Credentials</h3>
+              <h3 style="margin: 0 0 10px 0; color: #1f2937;">🔑 Your Credentials</h3>
               <p style="margin: 5px 0;"><strong>Email:</strong> ${member.email}</p>
               <p style="margin: 5px 0;"><strong>Temporary Password:</strong> ${password}</p>
               <p style="margin: 5px 0; font-size: 13px; color: #6b7280;">(Please change this after your first login)</p>
             </div>
 
             <div style="margin-bottom: 25px;">
-              <h3 style="color: #1f2937; margin-bottom: 10px;">搭 Your Assigned Work & Permissions</h3>
+              <h3 style="color: #1f2937; margin-bottom: 10px;">📋 Your Assigned Work & Permissions</h3>
               <p style="margin: 0; background: #ecfdf5; color: #065f46; padding: 12px; border-radius: 6px; border: 1px solid #a7f3d0;">
                 <strong>Role:</strong> ${role ? role.charAt(0).toUpperCase() + role.slice(1) : 'Recruiter'}<br/>
                 <strong>Access Rights:</strong> ${workDescription}

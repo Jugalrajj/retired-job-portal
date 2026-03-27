@@ -21,6 +21,19 @@ const useAuthStore = create(
         }
       },
 
+      // --- GOOGLE LOGIN ACTION ---
+      googleLogin: async ({ credential, role }) => {
+        try {
+          // Sending the Google token and the user's role to the backend
+          const { data } = await api.post("/auth/google", { token: credential, role });
+          set({ user: data, isAuthenticated: true });
+          return data;
+        } catch (error) {
+          console.error("Google Login Error:", error.response?.data?.message);
+          throw error;
+        }
+      },
+
       // --- REGISTER ACTION ---
       register: async (payload) => {
         try {
@@ -50,7 +63,7 @@ const useAuthStore = create(
         }
       },
 
-     forgotPassword: async (email) => {
+      forgotPassword: async (email) => {
         try {
           const { data } = await api.post("/auth/forgot-password", { email });
           return data;
@@ -59,7 +72,8 @@ const useAuthStore = create(
           throw error;
         }
       },
-    resetPassword: async ({ email, otp, password }) => {
+      
+      resetPassword: async ({ email, otp, password }) => {
         try {
           const { data } = await api.post(`/auth/reset-password`, { email, otp, password });
           return data;
