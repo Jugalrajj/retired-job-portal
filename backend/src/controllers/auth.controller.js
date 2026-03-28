@@ -2,7 +2,6 @@ import User from "../models/User.model.js";
 import sendEmail from "../utils/sendEmail.js";
 import jwt from "jsonwebtoken";
 import axios from "axios";
-import { OAuth2Client } from "google-auth-library";
 
 // --- HELPERS ---
 const generateToken = (id) => {

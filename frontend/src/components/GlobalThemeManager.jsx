@@ -1,22 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import useThemeStore from '../context/useThemeStore';
 
 const GlobalThemeManager = () => {
-  // Destructure theme and the toggle/set function
-  // We check for 'setTheme' (if your store has it) or fallback to 'toggleTheme'
-  const { theme, toggleTheme, setTheme } = useThemeStore();
-
-  // 🔥 FIX: FORCE BLACK THEME ON PAGE LOAD
-  useEffect(() => {
-    if (theme === 'light') {
-      // If store supports direct setting, use it. Otherwise toggle.
-      if (setTheme) {
-        setTheme('dark');
-      } else if (toggleTheme) {
-        toggleTheme();
-      }
-    }
-  }, []); // Empty dependency array = Runs once on mount (reload)
+  // Destructure theme. We no longer need toggleTheme or setTheme here 
+  // because we removed the useEffect that forced the theme change on load.
+  const { theme } = useThemeStore();
 
   return (
     <style>{`
