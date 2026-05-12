@@ -13,6 +13,7 @@
     "@react-oauth/google": "^0.13.4",
     "axios": "^1.13.2",
     "emoji-picker-react": "^4.16.1",
+    "framer-motion": "^12.38.0",
     "gsap": "^3.14.2",
     "lucide-react": "^0.562.0",
     "react": "^19.2.0",

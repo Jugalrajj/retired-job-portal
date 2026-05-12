@@ -35,7 +35,7 @@ const SeeJobs = () => {
     workModes: ["Remote", "On-Site", "Hybrid"], // Fallbacks
     datePosted: ["All", "Last 24 hours", "Last 3 days", "Last 7 days"], // Logic-based (Static)
 
-    // 🔥 NEW: Store nested categories from API
+    // 🌟 NEW: Store nested categories from API
     categories: [],
     educationCategories: [],
 
@@ -76,7 +76,7 @@ const SeeJobs = () => {
     workMode: "All",
     workType: "All",
 
-    // 🔥 NEW PARENT FILTERS
+    // 🌟 NEW PARENT FILTERS
     department: "All",
     educationType: "All",
 
@@ -128,7 +128,7 @@ const SeeJobs = () => {
       try {
         const { data } = await api.get("/config");
         if (data) {
-          // 🔥 Extract all nested roles/qualifications to use as global fallbacks
+          // 🌟 Extract all nested roles/qualifications to use as global fallbacks
           // when "All Departments" or "All Categories" is selected
           const allRoles = data.categories
             ? Array.from(
@@ -282,7 +282,7 @@ const SeeJobs = () => {
     setFilters((prev) => {
       const updatedData = { ...prev, [key]: value };
 
-      // 🔥 Automatically clear dependent fields if parent changes
+      // 🌟 Automatically clear dependent fields if parent changes
       if (key === "department") updatedData.roleCategory = "All";
       if (key === "educationType") updatedData.educationLevel = "All";
 
@@ -355,6 +355,24 @@ const SeeJobs = () => {
           @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
           @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
 
+          /* --- ANIMATIONS (NEW) --- */
+          @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+          }
+          @keyframes pulseBlob {
+            0%, 100% { transform: scale(1); opacity: 0.15; }
+            50% { transform: scale(1.1); opacity: 0.25; }
+          }
+
           body { background-color: var(--bg-root); overflow-x: hidden; transition: background-color 0.3s ease; }
           * { box-sizing: border-box; }
 
@@ -371,9 +389,10 @@ const SeeJobs = () => {
           .bg-blob {
             position: absolute; border-radius: 50%; filter: blur(120px);
             opacity: 0.15; z-index: 0; pointer-events: none;
+            animation: pulseBlob 10s infinite ease-in-out; /* Added Animation */
           }
           .b1 { top: -10%; left: -10%; width: 600px; height: 600px; background: #4f46e5; }
-          .b2 { top: 20%; right: -5%; width: 500px; height: 500px; background: var(--primary); }
+          .b2 { top: 20%; right: -5%; width: 500px; height: 500px; background: var(--primary); animation-delay: -5s; }
 
           .layout-grid {
             display: grid;
@@ -398,6 +417,15 @@ const SeeJobs = () => {
             scrollbar-width: none; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
           }
+          
+          /* Only apply desktop animation if screen is wide enough */
+          @media (min-width: 1025px) {
+            .filter-sidebar {
+              opacity: 0;
+              animation: fadeInLeft 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            }
+          }
+
           .filter-sidebar::-webkit-scrollbar { display: none; }
 
           .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
@@ -417,7 +445,11 @@ const SeeJobs = () => {
 
           .select-box { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); color: var(--text-main); background: var(--bg-input); font-size: 14px; outline: none; }
 
-          .content-header { margin-bottom: 30px; }
+          .content-header { 
+            margin-bottom: 30px; 
+            opacity: 0;
+            animation: fadeInDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; /* Added Animation */
+          }
 
           .search-capsule {
             background: var(--bg-input);
@@ -488,6 +520,10 @@ const SeeJobs = () => {
             display: flex; flex-direction: column; gap: 16px;
             position: relative; transition: all 0.3s ease;
             cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            
+            /* Added Animation */
+            opacity: 0;
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
           }
           .job-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15); }
 
@@ -513,7 +549,13 @@ const SeeJobs = () => {
           .btn-apply { background: var(--text-main); color: var(--bg-root); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
           .btn-apply:hover { background: var(--primary); color: #000; }
 
-          .pagination-container { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 40px; padding-bottom: 20px; }
+          .pagination-container { 
+            display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 40px; padding-bottom: 20px; 
+            /* Added Animation */
+            opacity: 0;
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            animation-delay: 0.5s;
+          }
           .page-btn { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
           .page-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
           .page-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
@@ -523,7 +565,13 @@ const SeeJobs = () => {
           .loading-spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 80px auto; }
           @keyframes spin { to { transform: rotate(360deg); } }
 
-          .empty-state { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center; width: 100%; color: var(--text-sub); }
+          .empty-state { 
+            grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center; width: 100%; color: var(--text-sub); 
+            /* Added Animation */
+            opacity: 0;
+            animation: fadeInUp 0.6s forwards;
+            animation-delay: 0.2s;
+          }
 
           /* RESPONSIVE FILTER FIXES */
           @media (max-width: 1024px) {
@@ -873,7 +921,7 @@ const SeeJobs = () => {
             {loading ? (
               <div className="loading-spinner"></div>
             ) : currentJobs.length > 0 ? (
-              currentJobs.map((job) => {
+              currentJobs.map((job, index) => {
                 const companyName =
                   job.companyId?.name || job.employer?.name || "Hiring Company";
                 const logoUrl = getLogoUrl(
@@ -884,6 +932,7 @@ const SeeJobs = () => {
                     key={job._id}
                     className="job-card"
                     onClick={() => handleJobClick(job._id)}
+                    style={{ animationDelay: `${index * 0.08 + 0.1}s` }} /* Added Stagger Effect */
                   >
                     <div className="card-top">
                       <div className="card-logo">

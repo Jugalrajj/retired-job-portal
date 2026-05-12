@@ -156,7 +156,7 @@ const AboutUsPage = () => {
         }
         /* Unique Shapes for Cards */
         .role-card.seeker { border-radius: 100px 40px 40px 40px; }
-        .role-card.employer { border-radius: 40px 40px 100px 40px; margin-top: 40px; } /* Staggered effect */
+        .role-card.employer { border-radius: 40px 40px 100px 40px;} /* Staggered effect */
         
         .role-card:hover { transform: translateY(-10px); border-color: var(--primary); }
         

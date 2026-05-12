@@ -612,6 +612,7 @@ const AdminDashboard = () => {
       toast.error("Update failed");
     }
   };
+  
 
   const getFilteredData = () => {
     const term = searchTerm.toLowerCase();
@@ -748,7 +749,7 @@ const AdminDashboard = () => {
             <Shield size={24} color="white" />
           </div>
           <span style={styles.brandText}>
-            Admin<span style={{ color: "#6366f1" }}>Hub</span>
+            Admin<span style={{ color: "#f59e0b" }}>Hub</span>
           </span>
         </div>
         <nav style={styles.nav}>
@@ -3137,7 +3138,7 @@ const NavButton = ({ icon, label, active, onClick }) => (
       ...styles.navBtn,
       background: active ? "rgba(99, 102, 241, 0.15)" : "transparent",
       color: active ? "#fff" : "#94a3b8",
-      borderLeft: active ? "4px solid #6366f1" : "4px solid transparent",
+      borderLeft: active ? "4px solid #f59e0b" : "4px solid transparent",
     }}
     className="smooth-transition"
   >
@@ -3256,7 +3257,7 @@ const styles = {
   },
   sidebar: {
     width: "280px",
-    background: "#1e293b",
+    background: "black",
     color: "white",
     display: "flex",
     flexDirection: "column",
@@ -3273,7 +3274,7 @@ const styles = {
   logoIcon: {
     width: "40px",
     height: "40px",
-    background: "#6366f1",
+    background: "#f59e0b",
     borderRadius: "12px",
     display: "flex",
     alignItems: "center",

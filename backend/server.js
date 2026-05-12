@@ -24,6 +24,8 @@ import partnerRoutes from "./src/routes/partner.routes.js";
 import paymentRoutes from "./src/routes/payment.routes.js";
 import widgetRoutes from "./src/routes/widget.routes.js"; 
 import couponRoutes from "./src/routes/coupon.routes.js"; 
+import resumeRoutes from "./src/routes/resumeRoutes.js";
+import analyticsRoutes from "./src/routes/analyticsRoutes.js"; // <--- NEW: Analytics Routes
 
 // --- NEW: CRON JOB IMPORT ---
 import initScheduledJobs from "./src/utils/cronJobs.js"; 
@@ -96,7 +98,8 @@ app.use("/api/upload", uploadRoutes); // <--- MOUNTED UPLOAD ROUTE HERE
 app.use("/api/partners", partnerRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/coupons", couponRoutes); // <--- FIXED: Use couponRoutes instead of paymentRoutes
-
+app.use("/api/resume", resumeRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 app.get("/", (req, res) => {
   res.send("Job Portal API running");

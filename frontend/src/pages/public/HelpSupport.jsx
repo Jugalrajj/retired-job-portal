@@ -153,23 +153,39 @@ const HelpSupport = () => {
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
         
+        /* --- ANIMATIONS (NEW) --- */
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+          from { opacity: 0; transform: translateY(-30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseBlob {
+          0%, 100% { transform: scale(1); opacity: 0.15; }
+          50% { transform: scale(1.1); opacity: 0.25; }
+        }
+
         /* --- PAGE WRAPPER --- */
         .dark-help-wrapper {
           min-height: 100vh;
-          background-color: var(--bg-root); /* 🔥 Theme Var */
+          background-color: var(--bg-root); /* 🌟 Theme Var */
           font-family: 'Plus Jakarta Sans', sans-serif;
           position: relative;
-          color: var(--text-main); /* 🔥 Theme Var */
+          color: var(--text-main); /* 🌟 Theme Var */
           transition: background-color 0.3s ease;
+          overflow: hidden;
         }
 
         /* --- BACKGROUND FX --- */
         .bg-blob {
           position: absolute; border-radius: 50%; filter: blur(120px);
           opacity: 0.15; z-index: 0; pointer-events: none;
+          animation: pulseBlob 10s infinite ease-in-out; /* Added Animation */
         }
         .b1 { top: -10%; left: -10%; width: 600px; height: 600px; background: #4f46e5; }
-        .b2 { bottom: -10%; right: -5%; width: 500px; height: 500px; background: var(--primary); }
+        .b2 { bottom: -10%; right: -5%; width: 500px; height: 500px; background: var(--primary); animation-delay: -5s; }
 
         /* --- CONTAINER --- */
         .content-container {
@@ -187,7 +203,13 @@ const HelpSupport = () => {
           position: relative;
           overflow: hidden;
         }
-        .hero-content { position: relative; z-index: 10; max-width: 700px; margin: 0 auto; }
+        
+        .hero-content { 
+          position: relative; z-index: 10; max-width: 700px; margin: 0 auto; 
+          /* Added Animation */
+          opacity: 0;
+          animation: fadeInDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
         
         .help-hero h1 { 
           font-family: 'Playfair Display', serif; font-size: 3rem; 
@@ -202,12 +224,17 @@ const HelpSupport = () => {
 
         /* Search Bar */
         .search-bar-container {
-          background: var(--bg-card); /* 🔥 Theme Var */
+          background: var(--bg-card); /* 🌟 Theme Var */
           border-radius: 50px; 
           padding: 10px 24px; border: 1px solid var(--border);
           display: flex; align-items: center; gap: 12px;
           box-shadow: 0 15px 30px -5px rgba(0,0,0,0.1);
           transition: 0.3s; max-width: 500px; margin: 0 auto;
+          
+          /* Added Animation */
+          opacity: 0;
+          animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+          animation-delay: 0.2s;
         }
         .search-bar-container:focus-within {
           border-color: var(--primary);
@@ -232,11 +259,15 @@ const HelpSupport = () => {
           gap: 20px; margin-bottom: 50px;
         }
         .cat-card {
-          background: var(--bg-card); /* 🔥 Theme Var */
+          background: var(--bg-card); /* 🌟 Theme Var */
           border: 1px solid var(--border); border-radius: 20px;
           padding: 30px 24px; text-align: center; cursor: pointer; transition: all 0.3s;
           box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05); display: flex;
           flex-direction: column; align-items: center;
+          
+          /* Added Animation */
+          opacity: 0;
+          animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
         .cat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
         
@@ -258,7 +289,15 @@ const HelpSupport = () => {
 
         /* --- FAQ SECTION --- */
         .faq-section { margin-bottom: 60px; }
-        .section-header { margin-bottom: 24px; }
+        
+        .section-header { 
+          margin-bottom: 24px; 
+          /* Added Animation */
+          opacity: 0;
+          animation: fadeInDown 0.6s forwards;
+          animation-delay: 0.4s;
+        }
+        
         .section-header h2 { text-align: center; font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--text-main); margin: 0 0 8px; }
         .section-header p { text-align: center; color: var(--text-sub); font-size: 1rem; margin: 0; }
 
@@ -267,6 +306,10 @@ const HelpSupport = () => {
         .faq-item {
           background: var(--bg-card); border: 1px solid var(--border); 
           border-radius: 16px; overflow: hidden; transition: all 0.3s ease;
+          
+          /* Added Animation */
+          opacity: 0;
+          animation: fadeInUp 0.5s forwards;
         }
         .faq-item.open { border-color: var(--primary); background: var(--bg-input); }
 
@@ -340,7 +383,7 @@ const HelpSupport = () => {
         <div className="help-hero">
           <div className="hero-content">
             <h1>
-              Hello, {isLoggedIn ? user?.user?.name.split(" ")[0] : "Guest"} 👋
+              Hello, {isLoggedIn ? user?.user?.name.split(" ")[0] : "Guest"} ✌️
             </h1>
             <p>
               Welcome to the{" "}
@@ -363,7 +406,7 @@ const HelpSupport = () => {
         <div className="content-width">
           {/* CATEGORY TABS */}
           <div className="category-grid">
-            {visibleTabs.map((tab) => (
+            {visibleTabs.map((tab, index) => (
               <button
                 key={tab.id}
                 className={`cat-card ${activeTab === tab.id ? "active" : ""}`}
@@ -371,6 +414,7 @@ const HelpSupport = () => {
                   setActiveTab(tab.id);
                   setOpenFaq(null);
                 }}
+                style={{ animationDelay: `${index * 0.1 + 0.3}s` }} /* Added Stagger Effect */
               >
                 <div className="cat-icon">{tab.icon}</div>
                 <h3>{tab.label}</h3>
@@ -392,12 +436,14 @@ const HelpSupport = () => {
               <p>Common questions regarding {activeTab} operations.</p>
             </div>
 
-            <div className="faq-list">
+            {/* Added key={activeTab} so the list re-animates nicely when tabs switch */}
+            <div className="faq-list" key={activeTab}>
               {currentFaqs.length > 0 ? (
                 currentFaqs.map((faq, index) => (
                   <div
                     key={index}
                     className={`faq-item ${openFaq === index ? "open" : ""}`}
+                    style={{ animationDelay: `${index * 0.1 + 0.5}s` }} /* Added Stagger Effect */
                   >
                     <button
                       className="faq-question"

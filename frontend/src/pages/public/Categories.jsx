@@ -74,6 +74,22 @@ const Categories = () => {
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
 
+        /* --- ANIMATIONS (NEW) --- */
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+          from { opacity: 0; transform: translateY(-30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseBlob {
+          0%, 100% { transform: scale(1); opacity: 0.15; }
+          50% { transform: scale(1.1); opacity: 0.25; }
+        }
+
         .dark-cat-wrapper {
           background-color: var(--bg-root); /* 🔥 Theme Var */
           min-height: calc(100vh - 80px); /* Adjust based on navbar height */
@@ -88,9 +104,10 @@ const Categories = () => {
         .bg-blob {
           position: absolute; border-radius: 50%; filter: blur(120px);
           opacity: 0.15; z-index: 0; pointer-events: none;
+          animation: pulseBlob 10s infinite ease-in-out; /* Added Animation */
         }
         .b1 { top: -10%; left: -10%; width: 600px; height: 600px; background: #4f46e5; }
-        .b2 { bottom: -10%; right: -10%; width: 500px; height: 500px; background: var(--primary); }
+        .b2 { bottom: -10%; right: -10%; width: 500px; height: 500px; background: var(--primary); animation-delay: -5s; /* Offset for asymmetry */ }
 
         /* --- CONTENT CONTAINER (1280px) --- */
         .content-container {
@@ -105,6 +122,8 @@ const Categories = () => {
         .header-box {
           text-align: center;
           margin-bottom: 60px;
+          opacity: 0; /* Starting state for animation */
+          animation: fadeInDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; /* Added Animation */
         }
         .header-box h2 {
           font-family: 'Playfair Display', serif;
@@ -149,6 +168,10 @@ const Categories = () => {
           position: relative;
           overflow: hidden;
           box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+          
+          /* Added Animation */
+          opacity: 0;
+          animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
         }
 
         .cat-card:hover {
@@ -288,6 +311,7 @@ const Categories = () => {
                 key={index} 
                 className={`cat-card ${hasImage ? 'has-image' : ''}`}
                 onClick={() => navigate(`/category/${encodeURIComponent(cat.title)}`)}
+                style={{ animationDelay: `${index * 0.08}s` }} /* Added Stagger Effect */
               >
                 {/* 1. Background Image Layer (Conditional) */}
                 {hasImage && (

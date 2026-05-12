@@ -65,6 +65,13 @@ const userSchema = new mongoose.Schema(
     // 🔥 NEW: Tracks when the user's credits expire (90 days limit)
     creditsExpireAt: { type: Date, default: null },
 
+    // --- AI FEATURES ---
+    // Tracks the number of AI resumes generated for free tier limits
+    aiResumeGenerations: {
+      type: Number,
+      default: 0
+    },
+
     // --- SEEKER SPECIFIC ---
     savedJobs: [{
       type: mongoose.Schema.Types.ObjectId,

@@ -59,6 +59,9 @@ import BillingHistory from "./pages/employer/BillingHistory";
 import EmployerDetailsForm from "./pages/employer/EmployerDetailsForm";
 import SeeJobs from "./pages/seeker/SeeJobs";
 import NotFound from "./pages/NotFound";
+import AiResumeMaker from "./pages/seeker/AiResumeMaker";
+import SeekerBilling from "./pages/seeker/SeekerBilling";
+import SeekerAnalytics from "./pages/seeker/SeekerAnalytics";
 
 // --- 🔥 NEW COMPONENT: Restrict Employers/Recruiters from Seeker Pages ---
 const SeekerOrGuest = () => {
@@ -131,6 +134,9 @@ function App() {
             <Route path="/saved-jobs" element={<SavedJobs />} />
             <Route path="/job/:id" element={<SeekerJobDetails />} />
             <Route path="/preferences" element={<JobPreferences />} />
+            <Route path="/ai-resume" element={<AiResumeMaker />} />
+            <Route path="/seeker-billing" element={<SeekerBilling />} />
+            <Route path="/seeker-analytics" element={<SeekerAnalytics />} />
           </Route>
 
 

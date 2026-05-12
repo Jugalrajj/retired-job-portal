@@ -40,11 +40,16 @@ const ChatWidget = () => {
     setIsTyping(true); 
 
     try {
+      // *** ADDED: Strict prompt guardrail to prevent out-of-scope questions ***
+      // This forces the AI to only answer job/website related queries.
+      const strictPrompt = `You are an exclusive AI customer support assistant for IVGJobs, a job portal website. Your ONLY purpose is to assist users with finding jobs, posting jobs, employer plans, career advice, and navigating the IVGJobs platform. If the following user query is NOT related to jobs, careers, hiring, or our website (for example, if they ask for recipes, travel advice, general knowledge, etc.), you must politely refuse to answer and state that you are only able to assist with IVGJobs-related queries. Here is the user's query: "${messageText}"`;
+
       // *** INTEGRATION UPDATE: Sending 'message' to backend ***
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: messageText }),
+        // Send the guarded strictPrompt instead of just the raw message
+        body: JSON.stringify({ message: strictPrompt }),
       });
 
       if (!response.ok) throw new Error("Failed to get response");

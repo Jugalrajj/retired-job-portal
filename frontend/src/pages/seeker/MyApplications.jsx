@@ -182,6 +182,22 @@ const MyApplications = () => {
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
         
+        /* --- ANIMATIONS (NEW) --- */
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+          from { opacity: 0; transform: translateY(-30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseBlob {
+          0%, 100% { transform: scale(1); opacity: 0.15; }
+          50% { transform: scale(1.1); opacity: 0.25; }
+        }
+
         /* --- PAGE WRAPPER --- */
         .dark-app-wrapper {
           min-height: 100vh;
@@ -192,15 +208,17 @@ const MyApplications = () => {
           color: var(--text-main); /* 🔥 Theme Var */
           display: flex; justify-content: center;
           transition: background-color 0.3s ease;
+          overflow: hidden;
         }
 
         /* --- BACKGROUND FX --- */
         .bg-blob {
           position: absolute; border-radius: 50%; filter: blur(120px);
           opacity: 0.15; z-index: 0; pointer-events: none;
+          animation: pulseBlob 10s infinite ease-in-out; /* Added Animation */
         }
         .b1 { top: -10%; left: -10%; width: 600px; height: 600px; background: #4f46e5; }
-        .b2 { bottom: -10%; right: -10%; width: 500px; height: 500px; background: var(--primary); }
+        .b2 { bottom: -10%; right: -10%; width: 500px; height: 500px; background: var(--primary); animation-delay: -5s; }
 
         /* --- CONTAINER --- */
         .content-container {
@@ -216,6 +234,10 @@ const MyApplications = () => {
           flex-wrap: wrap; gap: 20px;
           padding-bottom: 20px;
           border-bottom: 1px solid var(--border); /* 🔥 Theme Var */
+          
+          /* Added Animation */
+          opacity: 0;
+          animation: fadeInDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
         
         .header-titles h1 {
@@ -237,6 +259,11 @@ const MyApplications = () => {
         .controls-row {
           display: flex; justify-content: space-between; align-items: center;
           margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
+
+          /* Added Animation */
+          opacity: 0;
+          animation: fadeInDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+          animation-delay: 0.1s;
         }
 
         /* Search Box Style */
@@ -301,6 +328,10 @@ const MyApplications = () => {
           box-shadow: 0 4px 20px rgba(0,0,0,0.05);
           display: flex; flex-direction: column; gap: 16px;
           overflow: hidden;
+
+          /* Added Animation */
+          opacity: 0;
+          animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
         .app-card:hover {
@@ -423,6 +454,11 @@ const MyApplications = () => {
           border-radius: 24px;
           border: 1px dashed var(--border);
           grid-column: 1 / -1;
+          
+          /* Added Animation */
+          opacity: 0;
+          animation: fadeInUp 0.5s forwards;
+          animation-delay: 0.2s;
         }
         .empty-icon-wrap {
           background: var(--bg-input); width: 80px; height: 80px; 
@@ -450,6 +486,11 @@ const MyApplications = () => {
         /* --- PAGINATION STYLING --- */
         .pagination-container {
           display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 20px; padding-bottom: 20px;
+          
+          /* Added Animation */
+          opacity: 0;
+          animation: fadeInUp 0.5s forwards;
+          animation-delay: 0.5s;
         }
         .page-btn {
           width: 40px; height: 40px; border-radius: 10px;
@@ -538,7 +579,7 @@ const MyApplications = () => {
         ) : filteredApplications.length > 0 ? (
           <>
             <div className="apps-grid">
-              {currentApplications.map((app) => {
+              {currentApplications.map((app, index) => {
                 const title = app.title || "Unknown Role";
                 const company = app.companyName || "Hiring Company";
                 const location = app.location || "Remote";
@@ -548,7 +589,11 @@ const MyApplications = () => {
                 const style = getStatusStyle(rawStatus);
 
                 return (
-                  <div key={app._id} className="app-card">
+                  <div 
+                    key={app._id} 
+                    className="app-card"
+                    style={{ animationDelay: `${index * 0.08 + 0.2}s` }} /* Added Stagger Effect */
+                  >
                     {/* Header: Logo & Status */}
                     <div className="card-header">
                       <div className="logo-box">
@@ -589,7 +634,6 @@ const MyApplications = () => {
                       </div>
                     </div>
 
-                    {/* Footer: Action */}
                     {/* Footer: Action */}
                     <div className="card-footer">
                       <div style={{ display: "flex", gap: "10px" }}>

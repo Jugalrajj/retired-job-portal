@@ -372,22 +372,6 @@ const Hero = () => {
             {/* END NEW BUTTON */}
 
           </form>
-{/* 
-          <div className="stats-row">
-            <div className="stat-item">
-               <h3>2,500+</h3>
-               <p>Open Roles</p>
-            </div>
-            <div className="stat-item">
-               <h3>450+</h3>
-               <p>Enterprises</p>
-            </div>
-            <div className="stat-item">
-               <h3>12k+</h3>
-               <p>Placements</p>
-            </div>
-          </div> */}
-
         </div>
       </div>
     </div>

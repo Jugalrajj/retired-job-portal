@@ -7,9 +7,9 @@ import api from "../services/api";
 import toast from "react-hot-toast";
 
 // Image 1: For Light Theme (Dark Text)
-import IVGLogoLight from "../assets/IVGJobslogo2.png"; 
+import IVGLogoLight from "../assets/IVGJobslogo2.png";
 // Image 2: For Dark Theme (White Text)
-import IVGLogoDark from "../assets/IVGLogo.png"; 
+import IVGLogoDark from "../assets/IVGLogo.png";
 
 import {
   LogOut,
@@ -26,7 +26,8 @@ import {
   MessageSquare,
   Shield,
   Sun, // Added Sun Icon
-  Moon, // Added Moon Icon
+  Moon,
+  BarChart2, // Added Moon Icon
 } from "lucide-react";
 
 // --- HELPER: Construct Image URL ---
@@ -63,7 +64,14 @@ const Navbar = () => {
   const location = useLocation();
 
   // --- DYNAMIC LOGO SELECTION ---
-  const currentLogo = theme === 'dark' ? IVGLogoDark : IVGLogoLight;
+  const currentLogo =
+    theme === "dark" ||
+    theme === "navy" ||
+    theme === "purple" ||
+    theme === "green" ||
+    theme === "charcoal"
+      ? IVGLogoDark
+      : IVGLogoLight;
 
   const [isOpen, setIsOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -72,7 +80,7 @@ const Navbar = () => {
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  
+
   // Refs for tracking outside clicks on both mobile and desktop menus
   const notifRef = useRef(null);
   const mobileNotifRef = useRef(null);
@@ -100,10 +108,10 @@ const Navbar = () => {
   // --- PERMISSION CHECK ---
   const hasPermission = (perm) => {
     if (!currentUser) return false;
-    
+
     // 1. Company Admins (Owner) get everything
     if (currentUser.isCompanyAdmin) return true;
-    
+
     // 2. Regular Employers (legacy) get everything if admin flag isn't set
     if (
       role === "employer" &&
@@ -218,7 +226,17 @@ const Navbar = () => {
   const fetchNotifications = async () => {
     try {
       const { data } = await api.get("/notifications");
-      setNotifications(data);
+
+      // Filter out notifications older than 10 days
+      const tenDaysAgo = new Date();
+      tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+
+      const filteredNotifications = data.filter((notif) => {
+        const notifDate = new Date(notif.createdAt);
+        return notifDate >= tenDaysAgo;
+      });
+
+      setNotifications(filteredNotifications);
     } catch (err) {
       console.error("Failed fetching notifications", err);
     }
@@ -261,11 +279,13 @@ const Navbar = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setShowDropdown(false);
       }
-      
+
       // Handle Notification Dropdown (checking both mobile and desktop refs)
-      const clickedDesktopNotif = notifRef.current && notifRef.current.contains(e.target);
-      const clickedMobileNotif = mobileNotifRef.current && mobileNotifRef.current.contains(e.target);
-      
+      const clickedDesktopNotif =
+        notifRef.current && notifRef.current.contains(e.target);
+      const clickedMobileNotif =
+        mobileNotifRef.current && mobileNotifRef.current.contains(e.target);
+
       if (!clickedDesktopNotif && !clickedMobileNotif) {
         setShowNotifDropdown(false);
       }
@@ -279,9 +299,7 @@ const Navbar = () => {
     <div className="notif-dropdown">
       <div className="notif-header">
         <h3>Notifications</h3>
-        {unreadCount > 0 && (
-          <span className="badge">{unreadCount} New</span>
-        )}
+        {unreadCount > 0 && <span className="badge">{unreadCount} New</span>}
       </div>
       <div className="notif-list">
         {notifications.length > 0 ? (
@@ -307,9 +325,7 @@ const Navbar = () => {
                   {formatTimeAgo(notif.createdAt)}
                 </span>
               </div>
-              {!notif.isRead && (
-                <div className="unread-dot"></div>
-              )}
+              {!notif.isRead && <div className="unread-dot"></div>}
             </div>
           ))
         ) : (
@@ -330,6 +346,7 @@ const Navbar = () => {
       { name: "Categories", path: "/categories" },
       { name: "About Us", path: "/about-us" },
       { name: "Help & Support", path: "/support" },
+      { name: "AI Resume Maker ✨", path: "/ai-resume" },
     ],
     seeker: [
       { name: "Home", path: "/" },
@@ -338,6 +355,7 @@ const Navbar = () => {
       { name: "My Applications", path: "/applications" },
       { name: "Saved Jobs", path: "/saved-jobs" },
       { name: "Messages", path: "/messages", badge: unreadMsgCount },
+      { name: "AI Resume Maker ✨", path: "/ai-resume" },
     ],
     employer: [
       { name: "Home", path: "/", alwaysShow: true },
@@ -361,21 +379,17 @@ const Navbar = () => {
       },
     ],
     // --- ADMIN CONFIG ---
-    admin: [
-      { name: "Dashboard", path: "/" }
-    ],
+    admin: [{ name: "Dashboard", path: "/" }],
   };
 
   // --- LOGIC FIX: Handle 'recruiter' same as 'employer' ---
   let currentNavLinks = [];
-  
+
   if (!currentUser) {
     currentNavLinks = navConfig.guest;
-  } 
-  else if (role === "seeker") {
+  } else if (role === "seeker") {
     currentNavLinks = navConfig.seeker;
-  }
-  else if (role === "employer" || role === "recruiter") { 
+  } else if (role === "employer" || role === "recruiter") {
     // 🔥 FIX: Include 'recruiter' here so they get the Employer Nav Links
     currentNavLinks = navConfig.employer.filter(
       (link) =>
@@ -383,8 +397,7 @@ const Navbar = () => {
         !link.requiredPerm ||
         hasPermission(link.requiredPerm),
     );
-  }
-  else if (role === "admin") {
+  } else if (role === "admin") {
     currentNavLinks = navConfig.admin;
   }
 
@@ -392,6 +405,16 @@ const Navbar = () => {
     seeker: [
       { name: "My Profile", path: "/seeker-details", icon: <User size={18} /> },
       { name: "Settings", path: "/settings", icon: <Settings size={18} /> },
+      {
+        name: "My Analytics",
+        path: "/seeker-analytics",
+        icon: <BarChart2 size={18} />,
+      },
+      {
+        name: "Billing / Plans",
+        path: "/seeker-billing",
+        icon: <CreditCard size={18} />,
+      },
       {
         name: "Help & Support",
         path: "/support",
@@ -439,7 +462,7 @@ const Navbar = () => {
     admin: [
       {
         name: "Admin Dashboard",
-        path: "/", 
+        path: "/",
         icon: <Shield size={18} />,
       },
       { name: "Settings", path: "/settings", icon: <Settings size={18} /> },
@@ -449,9 +472,9 @@ const Navbar = () => {
   let currentMenuLinks = [];
   if (currentUser) {
     // 🔥 FIX: Map 'recruiter' role to 'employer' menu config
-    const configRole = role === 'recruiter' ? 'employer' : role;
+    const configRole = role === "recruiter" ? "employer" : role;
     const rawLinks = menuConfig[configRole] || [];
-    
+
     currentMenuLinks = rawLinks.filter(
       (item) =>
         role === "seeker" ||
@@ -471,20 +494,26 @@ const Navbar = () => {
         <div className="darkbar-inner">
           {/* Logo Area */}
           <Link to="/" className="logo-link">
-             <img src={currentLogo} alt="IVG Logo" className="logo-img" />
+            <img src={currentLogo} alt="IVG Logo" className="logo-img" />
           </Link>
 
           {/* MOBILE ACTIONS */}
           <div className="mobile-actions">
             {/* --- ADDED THEME TOGGLE FOR MOBILE --- */}
-            <button className="icon-btn theme-toggle-mobile" onClick={toggleTheme}>
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            <button
+              className="icon-btn theme-toggle-mobile"
+              onClick={toggleTheme}
+            >
+              {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
             </button>
 
             {currentUser && (
-              <div className="dropdown-container mobile-notif" ref={mobileNotifRef}>
-                <button 
-                  className="icon-btn" 
+              <div
+                className="dropdown-container mobile-notif"
+                ref={mobileNotifRef}
+              >
+                <button
+                  className="icon-btn"
                   onClick={() => setShowNotifDropdown(!showNotifDropdown)}
                 >
                   <Bell size={20} />
@@ -507,8 +536,11 @@ const Navbar = () => {
                 <NavLink
                   key={link.name}
                   to={link.path}
-                  end={link.path === "/"} 
-                  className={({ isActive }) => (isActive ? "active" : "")}
+                  end={link.path === "/"}
+                  // 🔥 FIX: Add conditional class 'ai-resume-link' for specific styling
+                  className={({ isActive }) =>
+                    `${isActive ? "active" : ""} ${link.path === "/ai-resume" ? "ai-resume-link" : ""}`
+                  }
                 >
                   {link.name}
                   {link.badge > 0 && (
@@ -522,12 +554,12 @@ const Navbar = () => {
 
             <div className="right-section">
               {/* --- DESKTOP THEME TOGGLE --- */}
-              <button 
-                className="icon-btn desktop-theme-toggle" 
+              <button
+                className="icon-btn desktop-theme-toggle"
                 onClick={toggleTheme}
                 title="Toggle Theme"
               >
-                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
               </button>
 
               {/* AUTH BUTTONS OR USER PROFILE */}
@@ -618,7 +650,7 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      
+
       {/* SPACER DIV TO PREVENT CONTENT OVERLAP */}
       <div className="nav-spacer"></div>
 
@@ -715,7 +747,7 @@ const Navbar = () => {
       }
 
       /* --- NAV LINKS FIXES --- */
-      .nav-area { display: flex; gap: 40px; align-items: center; }
+      .nav-area { display: flex; gap: 20px; align-items: center; padding-left:2rem }
       .links { display: flex; gap: 8px; align-items: center; }
 
       .links a {
@@ -740,6 +772,41 @@ const Navbar = () => {
         background: var(--primary-dim); /* 🔥 UPDATED */
         border-color: var(--primary-dim); 
         box-shadow: 0 0 15px var(--primary-dim);
+      }
+
+      /* 🔥 SPECIAL TRANSPARENT SHINY STYLE FOR AI RESUME LINK 🔥 */
+    .links a.ai-resume-link {
+        background: transparent !important;
+        color: var(--text-main); /* <-- Changed from white to adapt to theme */
+        border: 1px solid grey;
+        box-shadow: 0 0 8px var(--primary-dim), inset 0 0 8px var(--primary-dim) !important;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 700;
+        overflow: hidden;
+        position: relative;
+        padding: 8px 20px; 
+        transform: scale(1.05); 
+      }
+
+      /* The Shiny Sweep Effect */
+      .links a.ai-resume-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+        transform: skewX(-20deg);
+        animation: shine 3s infinite;
+        pointer-events: none;
+      }
+
+      @keyframes shine {
+        0% { left: -100%; }
+        20% { left: 200%; }
+        100% { left: 200%; }
       }
 
       /* Badges */
@@ -930,6 +997,7 @@ const Navbar = () => {
           background: transparent; color: var(--primary); 
           box-shadow: none; border-color: var(--primary);
         }
+        .links a.ai-resume-link { border-radius: 12px; margin-top: 8px; justify-content: center; color: var(--primary) !important;} /* Tweaked for mobile */
         .msg-badge { position: static; border: none; margin-left: auto; transform: none; }
 
         /* Auth Buttons Mobile */
