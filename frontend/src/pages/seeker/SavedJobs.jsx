@@ -8,6 +8,8 @@ import {
   ChevronLeft, ChevronRight
 } from "lucide-react";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // --- DEFAULT LOGO ---
 const DEFAULT_LOGO = "https://cdn-icons-png.flaticon.com/512/4091/4091968.png";
 
@@ -97,7 +99,7 @@ const SavedJobs = () => {
     // Clean Relative Paths
     let cleanPath = url.replace(/\\/g, "/");
     if (cleanPath.startsWith("/")) cleanPath = cleanPath.substring(1);
-    return `http://localhost:5000/${cleanPath}`;
+    return `${BASE_URL}/${cleanPath}`;
   };
 
   return (

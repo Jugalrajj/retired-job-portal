@@ -28,6 +28,8 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const EmployerDetailsForm = () => {
   const navigate = useNavigate();
   const updateUser = useAuthStore((state) => state.updateUser);
@@ -91,7 +93,7 @@ const EmployerDetailsForm = () => {
     // Local preview
     if (path.startsWith("blob:")) return path;
 
-    return `http://localhost:5000/${path.replace(/\\/g, "/")}`;
+    return `${BASE_URL}/${path.replace(/\\/g, "/")}`;
   };
 
   // --- FETCH DATA (PROFILE + CONFIG) ---

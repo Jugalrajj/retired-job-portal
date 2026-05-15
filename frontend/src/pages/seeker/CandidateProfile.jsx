@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast"; // 🔥 Added Toast for notifications
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // --- HELPER: Safe File URL ---
 const getFileUrl = (path) => {
   if (!path || path === "undefined" || path === "null") return null;
@@ -26,7 +28,7 @@ const getFileUrl = (path) => {
     return path.replace(/^http:\/\//i, "https://");
   }
 
-  return `http://localhost:5000/${path.replace(/\\/g, "/")}`;
+ return `${BASE_URL}/${cleanPath}`;
 };
 
 const calculateExperience = (profile) => {

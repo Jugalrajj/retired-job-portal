@@ -27,6 +27,8 @@ import {
   Calendar,
 } from "lucide-react";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // =========================================================
 // 1. MAIN CONTAINER (Handles View/Edit Toggle & Config Fetch)
 // =========================================================
@@ -405,7 +407,7 @@ const ProfileView = ({ profile, user, onEdit }) => {
                   href={
                     profile.resumeUrl.startsWith("http")
                       ? profile.resumeUrl.replace(/^http:\/\//i, "https://")
-                      : `http://localhost:5000/${profile.resumeUrl.replace(/\\/g, "/")}`
+                      : `${BASE_URL}/${profile.resumeUrl.replace(/\\/g, "/")}`
                   }
                   target="_blank"
                   rel="noreferrer"

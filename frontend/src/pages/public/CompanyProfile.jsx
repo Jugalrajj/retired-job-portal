@@ -27,11 +27,13 @@ import {
   ChevronUp,
 } from "lucide-react";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const getImageUrl = (path) => {
   if (!path) return null;
   const cleanPath = path.replace(/\\/g, "/");
   if (cleanPath.startsWith("http")) return cleanPath;
-  return `http://localhost:5000/${cleanPath}`;
+  return `${BASE_URL}/${cleanPath}`;
 };
 
 const CompanyProfile = () => {

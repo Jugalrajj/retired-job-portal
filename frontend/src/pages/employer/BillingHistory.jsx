@@ -7,6 +7,8 @@ import {
 import useAuthStore from "../../context/useAuthStore";
 import toast from "react-hot-toast";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const BillingHistory = () => {
   const { user } = useAuthStore();
   const token = user?.token;
@@ -25,7 +27,7 @@ const BillingHistory = () => {
       setLoading(true);
       try {
         const { data } = await axios.get(
-          `http://localhost:5000/api/payment/history?page=${currentPage}&limit=8`,
+          `${BASE_URL}/api/payment/history?page=${currentPage}&limit=8`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         if (data.success) {
@@ -47,7 +49,7 @@ const BillingHistory = () => {
     setDownloadingId(paymentId);
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/payment/invoice/${paymentId}`,
+        `${BASE_URL}/api/payment/invoice/${paymentId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
           responseType: 'blob', // Important for files

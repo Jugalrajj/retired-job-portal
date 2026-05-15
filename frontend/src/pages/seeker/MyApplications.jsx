@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -173,7 +175,7 @@ const MyApplications = () => {
   const getLogoUrl = (url) => {
     if (!url) return null;
     if (url.startsWith("http")) return url;
-    return `http://localhost:5000/${url.replace(/\\/g, "/")}`;
+    return `${BASE_URL}/${url.replace(/\\/g, "/")}`;
   };
 
   return (

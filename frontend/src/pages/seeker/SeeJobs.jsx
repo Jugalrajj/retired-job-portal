@@ -21,6 +21,7 @@ import {
 
 // --- DEFAULT LOGO ---
 const DEFAULT_LOGO = "https://cdn-icons-png.flaticon.com/512/4091/4091968.png";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const SeeJobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -117,7 +118,7 @@ const SeeJobs = () => {
     if (url.startsWith("http")) return url;
     let cleanPath = url.replace(/\\/g, "/");
     if (cleanPath.startsWith("/")) cleanPath = cleanPath.substring(1);
-    return `http://localhost:5000/${cleanPath}`;
+    return `${BASE_URL}/${cleanPath}`;
   };
 
   // --- EFFECTS ---

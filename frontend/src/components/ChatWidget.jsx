@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MessageCircle, X, Send, Bot, User, Sparkles, Loader2, ChevronRight } from "lucide-react";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // *** UPDATED: Pointing to the correct Widget Route ***
-const API_URL = "http://localhost:5000/api/widget/query";
+const API_URL = `${BASE_URL}/api/widget/query`;
 
 // *** UPDATED: Renamed 'Pricing' to 'Employer Plans' for clarity ***
 const QUICK_TOPICS = [

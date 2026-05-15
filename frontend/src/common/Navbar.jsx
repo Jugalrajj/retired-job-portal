@@ -30,6 +30,8 @@ import {
   BarChart2, // Added Moon Icon
 } from "lucide-react";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // --- HELPER: Construct Image URL ---
 const getImageUrl = (path) => {
   if (!path) return null;
@@ -37,7 +39,7 @@ const getImageUrl = (path) => {
   if (path.startsWith("http")) return path;
   let cleanPath = path.replace(/\\/g, "/");
   if (cleanPath.startsWith("/")) cleanPath = cleanPath.substring(1);
-  return `http://localhost:5000/${cleanPath}`;
+  return `${BASE_URL}/${cleanPath}`;
 };
 
 // --- HELPER: Format Time for Notifications ---

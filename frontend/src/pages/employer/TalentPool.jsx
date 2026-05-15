@@ -28,11 +28,13 @@ import {
   ExternalLink, 
 } from "lucide-react";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // --- HELPER: Handle Image/File URLs safely ---
 const getFileUrl = (path) => {
   if (!path || path === "undefined" || path === "null") return null;
   if (path.startsWith("http")) return path;
-  return `http://localhost:5000/${path.replace(/\\/g, "/")}`;
+  return `${BASE_URL}/${path.replace(/\\/g, "/")}`;
 };
 
 const TalentPool = () => {

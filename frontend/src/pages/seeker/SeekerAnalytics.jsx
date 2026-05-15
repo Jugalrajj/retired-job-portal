@@ -7,6 +7,8 @@ import {
   Target, Activity, BarChart2, Award 
 } from 'lucide-react';
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const SeekerAnalytics = () => {
   const { user } = useAuthStore();
   
@@ -47,7 +49,7 @@ const SeekerAnalytics = () => {
         const token = user?.token;
         const config = { headers: { Authorization: `Bearer ${token}` } };
         // Fetch data from your backend
-        const { data } = await axios.get("http://localhost:5000/api/analytics/seeker", config);
+        const { data } = await axios.get(`${BASE_URL}/api/analytics/seeker`, config);
         
         // Update state with backend data
         setStats({

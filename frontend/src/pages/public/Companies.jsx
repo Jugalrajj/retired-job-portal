@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import api from "../../services/api";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // --- Sub-Component: Theme-Aware Card ---
 const CompanyCard = ({ co, navigate, getLogoUrl }) => {
   const cardRef = useRef(null);
@@ -123,7 +125,7 @@ const Companies = () => {
     if (!logoPath) return fallbackImage;
     const cleanPath = logoPath.replace(/\\/g, "/");
     if (cleanPath.startsWith("http")) return cleanPath;
-    return `http://localhost:5000/${cleanPath}`;
+    return `${BASE_URL}/${cleanPath}`;
   };
 
   useEffect(() => {

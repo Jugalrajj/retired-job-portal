@@ -23,6 +23,7 @@ import {
 
 // --- DEFAULT LOGO ---
 const DEFAULT_LOGO = "https://cdn-icons-png.flaticon.com/512/4091/4091968.png";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const Messages = () => {
   const { socket } = useSocket();
@@ -62,7 +63,7 @@ const Messages = () => {
       return path.replace(/^http:\/\//i, "https://");
     }
     const cleanPath = path.replace(/\\/g, "/");
-    return `http://localhost:5000/${cleanPath}`;
+    return `${BASE_URL}/${cleanPath}`;
   };
   // --- HELPER: Get Profile Image ---
   const getProfileImage = (userData) => {

@@ -12,13 +12,15 @@ import {
   Landmark
 } from "lucide-react";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // --- HELPER: Resolve Image URL ---
 const getImageUrl = (path) => {
   if (!path) return null;
   if (path.startsWith("http")) return path;
   if (path.startsWith("data:")) return path; 
   // IMPORTANT: Ensure this matches your backend URL (usually localhost:5000)
-  return `http://localhost:5000/${path.replace(/\\/g, "/")}`;
+  return `${BASE_URL}/${path.replace(/\\/g, "/")}`;
 };
 
 // --- ICON MAPPER ---

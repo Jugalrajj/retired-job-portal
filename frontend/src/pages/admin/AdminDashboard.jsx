@@ -57,6 +57,8 @@ import {
   Area,
 } from "recharts";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // --- HELPER: Resolve Image URL ---
 const getImageUrl = (path) => {
   if (!path) return null;
@@ -65,7 +67,7 @@ const getImageUrl = (path) => {
     return path.replace(/^http:\/\//i, 'https://');
   }
   if (path.startsWith("blob:")) return path;
-  return `http://localhost:5000/${path.replace(/\\/g, "/")}`;
+  return `${BASE_URL}/${path.replace(/\\/g, "/")}`;
 };
 
 const AdminDashboard = () => {

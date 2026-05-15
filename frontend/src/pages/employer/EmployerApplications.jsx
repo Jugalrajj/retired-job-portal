@@ -10,6 +10,8 @@ import {
 import toast from "react-hot-toast";
 import useAuthStore from "../../context/useAuthStore"; 
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const EmployerApplications = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -126,7 +128,7 @@ const EmployerApplications = () => {
   const getAvatarUrl = (url) => {
     if (!url) return null;
     if (url.startsWith("http") || url.startsWith("blob:")) return url;
-    return `http://localhost:5000/${url.replace(/\\/g, "/")}`;
+    return `${BASE_URL}/${url.replace(/\\/g, "/")}`;
   };
 
   // --- FILTER LOGIC ---
@@ -248,7 +250,7 @@ const EmployerApplications = () => {
         safe(app.availability),
         safe(app.expectedCompensation),
         safe(app.portfolio),
-        safe(app.resumeUrl ? `http://localhost:5000/${app.resumeUrl}` : "")
+        safe(app.resumeUrl ? `${BASE_URL}/${app.resumeUrl}` : "")
       ];
       csvRows.push(row.join(","));
     });

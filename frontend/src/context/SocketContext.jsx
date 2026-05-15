@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import useAuthStore from "./useAuthStore";
 import io from "socket.io-client";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const SocketContext = createContext();
 
 export const useSocket = () => {
@@ -16,7 +18,7 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (currentUser) {
-      const newSocket = io("http://localhost:5000", {
+      const newSocket = io(`${BASE_URL}/`, {
         query: { userId: currentUser._id },
       });
 

@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const ApplicantDetails = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -217,7 +219,7 @@ const ApplicantDetails = () => {
       return path.replace(/^http:\/\//i, 'https://'); 
     }
     
-    return `http://localhost:5000/${path.replace(/\\/g, "/")}`;
+    return `${BASE_URL}/${path.replace(/\\/g, "/")}`;
   };
 
   // --- HELPERS ---

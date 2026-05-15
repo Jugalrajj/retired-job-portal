@@ -8,6 +8,8 @@ import {
   ChevronLeft, 
 } from "lucide-react";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const CategoryJobs = () => {
   const { categoryName } = useParams(); // Get category from URL
   const navigate = useNavigate();
@@ -47,7 +49,7 @@ const CategoryJobs = () => {
     if (!path) return null;
     const cleanPath = path.replace(/\\/g, "/");
     if (cleanPath.startsWith("http")) return cleanPath;
-    return `http://localhost:5000/${cleanPath}`;
+    return `${BASE_URL}/${cleanPath}`;
   };
 
   // 3. New Handler for Job Clicks

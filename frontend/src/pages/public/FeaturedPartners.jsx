@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import api from "../../services/api";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // Helper to construct image URL
 const getImageUrl = (path) => {
   if (!path) return null;
   if (path.startsWith("http")) return path;
-  return `http://localhost:5000/${path.replace(/\\/g, "/")}`;
+  return `${BASE_URL}/${path.replace(/\\/g, "/")}`;
 };
 
 const FeaturedPartners = () => {

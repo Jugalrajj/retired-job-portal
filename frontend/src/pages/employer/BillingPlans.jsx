@@ -17,6 +17,8 @@ import {
 import useAuthStore from "../../context/useAuthStore";
 import toast from "react-hot-toast";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // --- RAZORPAY LOADER ---
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -151,7 +153,7 @@ const BillingPlans = () => {
       try {
         // 1. Fetch User Status
         if (token) {
-          const userRes = await axios.get("http://localhost:5000/api/auth/me", {
+          const userRes = await axios.get(`${BASE_URL}/api/auth/me`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           if (userRes.data && userRes.data.user) {
@@ -163,7 +165,7 @@ const BillingPlans = () => {
         }
 
         // 2. Fetch Pricing Config
-        const configRes = await axios.get("http://localhost:5000/api/config/credits");
+        const configRes = await axios.get(`${BASE_URL}/api/config/credits`);
         if (configRes.data && configRes.data.subscriptions) {
           setPlansConfig(configRes.data);
         }
@@ -210,7 +212,7 @@ const BillingPlans = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/coupons/validate", 
+        `${BASE_URL}/api/coupons/validate`, 
         { code: code, amount: planPrice },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -282,7 +284,7 @@ const BillingPlans = () => {
       }
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/payment/create-order",
+        `${BASE_URL}/api/payment/create-order`,
         { 
           amount: item.price, 
           planType: itemName, 
@@ -304,7 +306,7 @@ const BillingPlans = () => {
         handler: async (response) => {
           try {
             const verifyRes = await axios.post(
-              "http://localhost:5000/api/payment/verify-payment",
+              `${BASE_URL}/api/payment/verify-payment`,
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,

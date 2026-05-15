@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import useAuthStore from '../../context/useAuthStore'; // Ensure this path matches your project structure
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // --- RAZORPAY LOADER ---
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -154,7 +156,7 @@ const SeekerBilling = () => {
 
       // Create Order on Backend
       const { data } = await axios.post(
-        "http://localhost:5000/api/payment/create-order",
+        `${BASE_URL}/api/payment/create-order`,
         { 
           amount: amountValue, 
           planType: itemName, 
@@ -173,7 +175,7 @@ const SeekerBilling = () => {
           try {
             // Verify Payment on Backend
             const verifyRes = await axios.post(
-              "http://localhost:5000/api/payment/verify-payment",
+              `${BASE_URL}/api/payment/verify-payment`,
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,

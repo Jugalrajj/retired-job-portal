@@ -5,6 +5,8 @@ import { MapPin, ArrowRight,Briefcase } from "lucide-react";
 
 // --- HELPER: LOGO URL ---
 const DEFAULT_LOGO = "https://cdn-icons-png.flaticon.com/512/4091/4091968.png";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 
 const getLogoUrl = (url) => {
   if (!url || url.trim() === "") return DEFAULT_LOGO;
@@ -12,7 +14,7 @@ const getLogoUrl = (url) => {
   if (url.startsWith("http")) return url;
   let cleanPath = url.replace(/\\/g, "/");
   if (cleanPath.startsWith("/")) cleanPath = cleanPath.substring(1);
-  return `http://localhost:5000/${cleanPath}`;
+  return `${BASE_URL}/${cleanPath}`;
 };
 
 // --- HELPER: Random Cover Image for aesthetic ---

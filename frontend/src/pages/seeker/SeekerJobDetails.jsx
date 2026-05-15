@@ -10,6 +10,8 @@ import {
   Activity, Globe, Award, AlertCircle // Added AlertCircle
 } from "lucide-react";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const SeekerJobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -163,7 +165,7 @@ const SeekerJobDetails = () => {
   const getLogoUrl = (url) => {
     if (!url) return null;
     if (url.startsWith("http")) return url;
-    return `http://localhost:5000/${url.replace(/\\/g, "/")}`;
+    return `${BASE_URL}/${url.replace(/\\/g, "/")}`;
   };
 
   const formatSalary = () => {
