@@ -44,13 +44,32 @@ const server = http.createServer(app);
 // 5. INITIALIZE SOCKET.IO
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", 
+    origin: ["http://localhost:5173", "https://ivjobs.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
-app.use(cors());
+// --- UPDATED EXPRESS CORS CONFIGURATION ---
+const allowedOrigins = [
+  "http://localhost:5173", 
+  "https://ivjobs.vercel.app"
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, 
+  })
+);
+// ------------------------------------------
+
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
