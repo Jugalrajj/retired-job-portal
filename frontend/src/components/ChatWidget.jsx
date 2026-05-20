@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MessageCircle, X, Send, Bot, User, Sparkles, Loader2, ChevronRight } from "lucide-react";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL || "";
 
 // *** UPDATED: Pointing to the correct Widget Route ***
 const API_URL = `${BASE_URL}/api/widget/query`;
@@ -27,7 +27,7 @@ const ChatWidget = () => {
   ]);
   
   const messagesEndRef = useRef(null);
-
+ 
   useEffect(() => {
     if (isOpen) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

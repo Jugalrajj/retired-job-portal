@@ -12,7 +12,7 @@ import {
   Landmark
 } from "lucide-react";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL || "";
 
 // --- HELPER: Resolve Image URL ---
 const getImageUrl = (path) => {
