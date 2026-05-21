@@ -9,7 +9,7 @@ app.use(express.json());
 // List all the URLs that are allowed to access your backend
 const allowedOrigins = [
   "http://localhost:5173",      // For your local development
-  "https://ivjobs.vercel.app",  // For your live Vercel frontend
+  "https://ivgjobs.vercel.app",  // For your live Vercel frontend
   process.env.FRONTEND_URL      // Optional: Best practice for environment variables
 ];
 

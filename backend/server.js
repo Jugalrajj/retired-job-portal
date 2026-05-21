@@ -44,7 +44,7 @@ const server = http.createServer(app);
 // 5. INITIALIZE SOCKET.IO
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", "https://ivjobs.vercel.app"],
+    origin: ["http://localhost:5173", "https://ivgjobs.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -53,7 +53,7 @@ const io = new Server(server, {
 // --- UPDATED EXPRESS CORS CONFIGURATION ---
 const allowedOrigins = [
   "http://localhost:5173", 
-  "https://ivjobs.vercel.app"
+  "https://ivgjobs.vercel.app"
 ];
 
 app.use(
